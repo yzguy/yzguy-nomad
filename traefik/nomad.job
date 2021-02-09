@@ -1,0 +1,87 @@
+job "traefik" {
+  region = "global"
+  datacenters = ["dc1"]
+
+  type = "service"
+
+  constraint {
+    distinct_hosts = true
+  }
+
+  group "traefik" {
+    count = 3
+
+    network {
+      port "http" {
+        static = 80
+      }
+
+      port "https" {
+        static = 443
+      }
+
+      port "api" {
+        static = 8081
+      }
+    }
+
+    update {
+      max_parallel = 1
+      min_healthy_time = "30s"
+      auto_revert = true
+    }
+
+    service {
+      name = "traefik"
+
+      check {
+        name = "alive"
+        type = "tcp"
+        port = "http"
+        interval = "10s"
+        timeout = "2s"
+      }
+    }
+
+    task "traefik" {
+      driver = "docker"
+
+      config {
+        image = "traefik:v2.2"
+        network_mode = "host"
+
+        volumes = [
+          "local/traefik.toml:/etc/traefik/traefik.toml",
+          "local/dynamic:/etc/traefik/dynamic",
+          "local/certificates:/etc/traefik/certificates",
+        ]
+      }
+
+      template {
+        data = file("./traefik.toml")
+        destination = "local/traefik.toml"
+      }
+
+      template {
+        data = file("./certs.toml")
+        destination = "local/dynamic/certs.toml"
+      }
+
+      template {
+        data = file("~/.letsencrypt/etc/letsencrypt/live/yzguy.io/privkey.pem")
+        destination = "local/certificates/privkey.pem"
+      }
+
+      template {
+        data = file("~/.letsencrypt/etc/letsencrypt/live/yzguy.io/fullchain.pem")
+        destination = "local/certificates/cert.pem"
+      }
+
+
+      resources {
+        cpu = 100
+        memory = 128
+      }
+    }
+  }
+}
