@@ -28,7 +28,7 @@ job "netztp" {
       driver = "docker"
 
       config {
-        image = "registry.yzguy.io/netztp:5ec14ec"
+        image = "registry.yzguy.io/netztp:4192d8e"
 
         ports = ["http"]
       }
