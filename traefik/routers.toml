@@ -5,8 +5,18 @@
       service = "docker-registry"
 
       [http.routers.docker-registry.tls]
+
+    [http.routers.firmware-web]
+      rule = "Host(`firmware.yzguy.io`)"
+      service = "firmware-web"
+
+      [http.routers.firmware-web.tls]
   
   [http.services]
     [http.services.docker-registry.loadBalancer]
       [[http.services.docker-registry.loadBalancer.servers]]
         url = "http://moby.yzguy.io:5000/"
+
+    [http.services.firmware-web.loadBalancer]
+      [[http.services.firmware-web.loadBalancer.servers]]
+        url = "http://moby.yzguy.io:9000/"
