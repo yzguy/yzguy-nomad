@@ -68,6 +68,11 @@ job "traefik" {
       }
 
       template {
+        data = file("./routers.toml")
+        destination = "local/dynamic/routers.toml"
+      }
+
+      template {
         data = file("~/.letsencrypt/etc/letsencrypt/live/yzguy.io/privkey.pem")
         destination = "local/certificates/privkey.pem"
       }

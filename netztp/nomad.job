@@ -1,0 +1,43 @@
+job "netztp" {
+  region = "global"
+  datacenters = ["dc1"]
+
+  type = "service"
+
+  group "netztp" {
+    count = 1
+
+    network {
+      port "http" {
+        to = 8001
+      }
+    }
+
+    service {
+      name = "netztp"
+      port = "http"
+
+      tags = [
+        "traefik.enable=true",
+        "traefik.http.routers.netztp.rule=Host(`ztp.yzguy.io`)",
+        "traefik.http.routers.netztp.tls=",
+      ]
+    }
+
+    task "traefik" {
+      driver = "docker"
+
+      config {
+        image = "registry.yzguy.io/netztp:5ec14ec"
+
+        ports = ["http"]
+      }
+
+
+      resources {
+        cpu = 100
+        memory = 128
+      }
+    }
+  }
+}

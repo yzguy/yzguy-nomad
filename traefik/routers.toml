@@ -1,0 +1,12 @@
+[http]
+  [http.routers]
+    [http.routers.docker-registry]
+      rule = "Host(`registry.yzguy.io`)"
+      service = "docker-registry"
+
+      [http.routers.docker-registry.tls]
+  
+  [http.services]
+    [http.services.docker-registry.loadBalancer]
+      [[http.services.docker-registry.loadBalancer.servers]]
+        url = "http://moby.yzguy.io:5000/"
