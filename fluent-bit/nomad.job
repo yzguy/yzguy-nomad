@@ -4,8 +4,12 @@ job "fluent-bit" {
 
   type = "service"
 
+  constraint {
+    distinct_hosts = true
+  }
+
   group "fluent-bit" {
-    count = 1
+    count = 3
 
     network {
       port "syslog" {
