@@ -27,7 +27,7 @@ job "fluent-bit" {
       driver = "docker"
 
       config {
-        image = "registry.yzguy.io/fluent-bit:04364b3"
+        image = "registry.yzguy.io/fluent-bit:74d6c32"
         ports = ["syslog"]
       }
 
