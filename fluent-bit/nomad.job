@@ -1,0 +1,49 @@
+job "fluent-bit" {
+  region = "global"
+  datacenters = ["dc1"]
+
+  type = "service"
+
+  group "fluent-bit" {
+    count = 1
+
+    network {
+      port "syslog" {
+        to = 514
+      }
+    }
+
+    service {
+      name = "fluent-bit"
+      port = "syslog"
+
+      tags = [
+        "traefik.enable=true",
+        "traefik.udp.routers.syslog.entrypoints=syslogudp"
+      ]
+    }
+
+    task "fluent-bit" {
+      driver = "docker"
+
+      config {
+        image = "registry.yzguy.io/fluent-bit:04364b3"
+        ports = ["syslog"]
+      }
+
+      template {
+        data = <<EOH
+      NEWRELIC_LICENSE_KEY="{{key "NEWRELIC_LICENSE_KEY"}}"
+      EOH
+
+        destination = "secrets/file.env"
+        env         = true
+      }
+
+      resources {
+        cpu = 100
+        memory = 128
+      }
+    }
+  }
+}

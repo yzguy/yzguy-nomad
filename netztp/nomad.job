@@ -24,7 +24,7 @@ job "netztp" {
       ]
     }
 
-    task "traefik" {
+    task "netztp" {
       driver = "docker"
 
       config {

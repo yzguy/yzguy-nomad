@@ -1,6 +1,9 @@
 [log]
 
 [entryPoints]
+  [entryPoints.syslogudp]
+    address = ":514/udp"
+
   [entryPoints.web]
     address = ":80"
     [entryPoints.web.http]
