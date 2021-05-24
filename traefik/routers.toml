@@ -11,6 +11,12 @@
       service = "firmware-web"
 
       [http.routers.firmware-web.tls]
+
+    [http.routers.grafana]
+      rule = "Host(`grafana.yzguy.io`)"
+      service = "grafana"
+
+      [http.routers.grafana.tls]
   
   [http.services]
     [http.services.docker-registry.loadBalancer]
@@ -20,3 +26,7 @@
     [http.services.firmware-web.loadBalancer]
       [[http.services.firmware-web.loadBalancer.servers]]
         url = "http://moby.yzguy.io:9000/"
+
+    [http.services.grafana.loadBalancer]
+      [[http.services.grafana.loadBalancer.servers]]
+        url = "http://moby.yzguy.io:3000/"
